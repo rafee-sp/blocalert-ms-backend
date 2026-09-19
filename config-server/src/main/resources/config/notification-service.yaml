@@ -1,0 +1,128 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/BlocAlert
+      client:
+        registration:
+          notification-service-client:
+            client-id: ${KC_CLIENT_ID}
+            client-secret: ${KC_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+        provider:
+          notification-service-client:
+            token-uri: http://keycloak:8080/realms/blocalert/protocol/openid-connect/token
+  cloud:
+    function:
+      definition: alertNotification;subscriptionNotification
+    stream:
+      bindings:
+        alertNotification-in-0:
+          destination: alert.notification
+          group: notification-service
+        subscriptionNotification-in-0:
+          destination: subscription.notification
+          group: notification-service
+        alertDelivery-out-0:
+          destination: alert.delivery.status
+        alertBatchDelivery-out-0:
+          destination: alert.batch.delivery.status
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS:localhost:9092}
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3308}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+    show-sql: ${SHOW_SQL:false}
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          batch_size: 10
+          order_inserts: true
+          order_updates: true
+        generate_statistics: false
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          min-idle: 1
+          max-idle: 5
+
+mail:
+  from: ${SENDER_MAIL}
+  name: ${SENDER_NAME}
+  rate-limit: ${MAIL_RATE_LIMIT}
+
+sms:
+  sid: ${TWILIO_SID}
+  auth-id: ${TWILIO_AUTH_ID}
+  phone: ${TWILIO_PHONE}
+  rate-limit: ${SMS_RATE_LIMIT}
+  region: ${SMS_REGION:IN}
+
+services:
+  user-service:
+    base-url: ${USER_SERVICE_URL}
+
+application:
+  frontend-url: ${FRONTEND_URL}
+  backend-url: ${BACKEND_URL}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, info
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServiceCB:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+  retry:
+    instances:
+      userServiceCB:
+        maxAttempts: 3
+        waitDuration: 500ms

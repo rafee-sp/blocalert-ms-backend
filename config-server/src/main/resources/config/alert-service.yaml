@@ -1,0 +1,110 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/BlocAlert
+      client:
+        registration:
+          alert-service-client:
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+        provider:
+          alert-service-client:
+            token-uri: http://keycloak:8080/realms/blocalert/protocol/openid-connect/token
+  cloud:
+    function:
+      definition: consumePrice;alertDelivery;alertBatchDelivery
+    stream:
+      bindings:
+        consumePrice-in-0:
+          destination: crypto.price
+          group: alert-service
+        alertDelivery-in-0:
+          destination: alert.delivery.status
+          group: alert-delivery-service
+        alertBatchDelivery-in-0:
+          destination: alert.batch.delivery.status
+          group: alert-batch-delivery-service
+        alertNotification-out-0:
+          destination: alert.notification
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS}
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3308}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+    show-sql: ${SHOW_SQL:false}
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          batch_size: 10
+          order_inserts: true
+          order_updates: true
+        generate_statistics: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          min-idle: 1
+          max-idle: 5
+
+services:
+  user-service:
+    base-url: ${USER_SERVICE_URL}
+  crypto-service:
+    base-url: ${CRYPTO_SERVICE_URL}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServiceCB:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      cryptoServiceCB:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+  retry:
+    instances:
+      userServiceCB:
+        maxAttempts: 2
+        waitDuration: 500ms
+      cryptoServiceCB:
+        maxAttempts: 2
+        waitDuration: 300ms
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, info
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    health:
+      show-details: always
