@@ -1,0 +1,492 @@
+
+:root {
+    --blocalert-navy: #101f3d;
+    --blocalert-dark: #0b1730;
+    --blocalert-text: #222222;
+    --blocalert-muted: #666666;
+    --blocalert-border: #d5d5d5;
+    --blocalert-link: #5f5bd8;
+    --blocalert-white: #ffffff;
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: var(--blocalert-navy);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+
+/* Remove Keycloak default styling */
+
+.login-pf-page {
+    padding: 0;
+}
+
+.login-pf-page .card-pf {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+
+/* Main Layout */
+
+.login-pf-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-pf-page > .container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+}
+
+
+/*  BlocAlert Brand */
+
+.blocalert-brand {
+    position: absolute;
+
+    left: 12%;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 520px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.blocalert-logo {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    object-fit: contain;
+}
+
+
+#kc-header-wrapper,
+#kc-header {
+  flex: 0 0 auto !important;
+  align-self: center !important;
+  width: 220px !important;
+  height: 100px !important;
+  min-height: 0 !important;
+  margin: 0 auto 1.5rem !important;
+  background-image: url("../img/blocalert-logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  text-indent: -9999px;
+  overflow: hidden;
+  border: none !important;
+  filter: drop-shadow(0 0 24px rgba(255, 140, 0, 0.25));
+}
+
+
+/* =========================================================
+   Login Card
+   ========================================================= */
+
+.blocalert-login-card {
+    position: absolute;
+
+    right: 11%;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 340px;
+
+    background: var(--blocalert-white);
+
+    border-radius: 18px;
+
+    padding: 38px 34px 32px;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.blocalert-login-header {
+    text-align: center;
+
+    margin-bottom: 28px;
+}
+
+.blocalert-login-header h1 {
+    margin: 0 0 18px;
+
+    font-size: 21px;
+    font-weight: 500;
+
+    color: var(--blocalert-text);
+}
+
+.blocalert-login-header p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: var(--blocalert-text);
+}
+
+
+/* =========================================================
+   Fields
+   ========================================================= */
+
+.blocalert-field {
+    margin-bottom: 14px;
+}
+
+.blocalert-field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    color: var(--blocalert-text);
+}
+
+.blocalert-field input {
+    width: 100%;
+    height: 44px;
+
+    padding: 0 13px;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--blocalert-border);
+    border-radius: 3px;
+
+    background: #ffffff;
+
+    font-size: 13px;
+
+    color: var(--blocalert-text);
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.blocalert-field input:focus {
+    border-color: #9b9b9b;
+
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   Password
+   ========================================================= */
+
+.blocalert-password-wrapper {
+    position: relative;
+}
+
+.blocalert-password-wrapper input {
+    padding-right: 45px;
+}
+
+.blocalert-password-toggle {
+    position: absolute;
+
+    right: 0;
+    top: 0;
+
+    width: 42px;
+    height: 44px;
+
+    border: none;
+    background: transparent;
+
+    cursor: pointer;
+
+    color: #777;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   Forgot Password
+   ========================================================= */
+
+.blocalert-options {
+    display: flex;
+    justify-content: flex-start;
+
+    margin-top: 4px;
+    margin-bottom: 22px;
+}
+
+.blocalert-options a {
+    color: var(--blocalert-link);
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.blocalert-options a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   Continue Button
+   ========================================================= */
+
+.blocalert-submit {
+    width: 100%;
+    height: 45px;
+
+    border: none;
+    border-radius: 24px;
+
+    background: var(--blocalert-navy);
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.1s ease;
+}
+
+.blocalert-submit:hover {
+    background: #17294e;
+}
+
+.blocalert-submit:active {
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   Registration
+   ========================================================= */
+
+.blocalert-register {
+    margin-top: 19px;
+
+    text-align: left;
+
+    font-size: 12px;
+
+    color: var(--blocalert-text);
+}
+
+.blocalert-register a {
+    margin-left: 4px;
+
+    color: var(--blocalert-link);
+
+    font-weight: 500;
+
+    text-decoration: none;
+}
+
+.blocalert-register a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   Divider
+   ========================================================= */
+
+.blocalert-divider {
+    display: flex;
+    align-items: center;
+
+    margin: 27px 0 25px;
+
+    color: #444;
+
+    font-size: 11px;
+}
+
+.blocalert-divider::before,
+.blocalert-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #d8d8d8;
+}
+
+.blocalert-divider span {
+    margin: 0 14px;
+}
+
+
+/* =========================================================
+   Social Login
+   ========================================================= */
+
+.blocalert-social {
+    width: 100%;
+}
+
+.blocalert-google {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    width: 100%;
+    min-height: 40px;
+
+    color: #333;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    box-sizing: border-box;
+}
+
+.blocalert-google:hover {
+    text-decoration: none;
+}
+
+.google-icon {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    font-family: Arial, sans-serif;
+}
+
+
+/* =========================================================
+   Errors
+   ========================================================= */
+
+.blocalert-error {
+    margin-top: 8px;
+    margin-bottom: 12px;
+
+    padding: 9px 11px;
+
+    border-radius: 4px;
+
+    background: #fff1f1;
+
+    color: #c62828;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .login-pf-page > .container {
+        padding: 20px;
+    }
+
+    .blocalert-brand {
+        position: relative;
+
+        left: auto;
+        top: auto;
+
+        transform: none;
+
+        width: 100%;
+
+        margin-bottom: 30px;
+    }
+
+    .blocalert-logo {
+        max-width: 330px;
+    }
+
+    .blocalert-login-card {
+        position: relative;
+
+        right: auto;
+        top: auto;
+
+        transform: none;
+
+        width: 100%;
+        max-width: 380px;
+
+        margin: 0 auto;
+    }
+}
+
+
+/* =========================================================
+   Small Mobile
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .login-pf-page > .container {
+        padding: 15px;
+    }
+
+    .blocalert-logo {
+        max-width: 270px;
+    }
+
+    .blocalert-login-card {
+        padding: 30px 24px 27px;
+
+        border-radius: 15px;
+    }
+}

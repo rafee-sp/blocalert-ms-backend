@@ -1,0 +1,118 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/BlocAlert
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/users/**,/api/subscription/**,/api/assistant/**,/api/stripe/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: userServiceCB
+                    fallbackUri: forward:/fallback/user-service
+
+            - id: crypto-service
+              uri: lb://crypto-service
+              predicates:
+                - Path=/api/cryptos/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: cryptoServiceCB
+                    fallbackUri: forward:/fallback/crypto-service
+
+            - id: alert-service
+              uri: lb://alert-service
+              predicates:
+                - Path=/api/alerts/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: alertServiceCB
+                    fallbackUri: forward:/fallback/alert-service
+
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/notifications/**,/sms/callback/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: notificationServiceCB
+                    fallbackUri: forward:/fallback/notification-service
+
+            - id: crypto-home-ws
+              uri: lb:ws://crypto-service
+              predicates:
+                - Path=/ws/home/**
+
+            - id: crypto-detail-ws
+              uri: lb:ws://crypto-service
+              predicates:
+                - Path=/ws/crypto-detail/**
+
+            - id: alert-ws
+              uri: lb:ws://alert-service
+              predicates:
+                - Path=/ws/alerts/**
+    loadbalancer:
+      eager-load:
+        clients: user-service, crypto-service, alert-service, notification-service
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServiceCB:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      cryptoServiceCB:
+        slidingWindowSize: 50
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+      alertServiceCB:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      notificationServiceCB:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+  timelimiter:
+    instances:
+      userServiceCB:
+        timeout-duration: 30s
+      cryptoServiceCB:
+        timeout-duration: 10s
+      alertServiceCB:
+        timeout-duration: 10s
+      notificationServiceCB:
+        timeout-duration: 10s
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, info
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    health:
+      show-details: always

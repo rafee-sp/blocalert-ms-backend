@@ -1,0 +1,47 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'eureka-server'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['eureka-server:8761']
+        labels: { application: 'eureka-server' }
+
+  - job_name: 'config-server'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['config-server:8888']
+        labels: { application: 'config-server' }
+
+  - job_name: 'api-gateway'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['api-gateway:8081']
+        labels: { application: 'api-gateway' }
+
+  - job_name: 'user-service'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ 'user-service:8082' ]
+        labels: { application: 'user-service' }
+
+  - job_name: 'crypto-service'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: [ 'crypto-service:8083' ]
+        labels: { application: 'crypto-service' }
+
+  - job_name: 'alert-service'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['alert-service:8084']
+        labels: { application: 'alert-service' }
+
+  - job_name: 'notification-service'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['notification-service:8085']
+        labels: { application: 'notification-service' }
+
